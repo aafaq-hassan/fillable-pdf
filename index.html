@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>FillablePDF by vkononov</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">FillablePDF</h1>
+      <h2 class="project-tagline">Fill out or extract field values from simple fillable PDF forms using iText.</h2>
+      <a href="https://github.com/vkononov/fillable-pdf" class="btn">View on GitHub</a>
+      <a href="https://github.com/vkononov/fillable-pdf/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/vkononov/fillable-pdf/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="fillablepdf" class="anchor" href="#fillablepdf" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FillablePDF</h1>
+
+<p><a href="https://rubygems.org/gems/fillable-pdf"><img src="https://badge.fury.io/rb/fillable-pdf.svg" alt="Gem Version"></a></p>
+
+<p>FillablePDF is an extremely simple and lightweight utility that bridges iText and Ruby in order to fill out fillable PDF forms or extract field values from previously filled out PDF forms. </p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Add this line to your application's Gemfile:</p>
+
+<pre><code>gem 'fillable-pdf'
+</code></pre>
+
+<p>And then execute:</p>
+
+<pre><code>bundle
+</code></pre>
+
+<p>Or install it yourself as:</p>
+
+<pre><code>gem install fillable-pdf
+</code></pre>
+
+<p>If you are using this gem in a script, you need to require it manually:</p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">require</span> <span class="pl-s"><span class="pl-pds">'</span>fillable-xml<span class="pl-pds">'</span></span></pre></div>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>First of all, you should open a fillable PDF file:</p>
+
+<div class="highlight highlight-source-ruby"><pre>pdf <span class="pl-k">=</span> <span class="pl-c1">FillablePDF</span>.<span class="pl-k">new</span>(<span class="pl-s"><span class="pl-pds">'</span>input.pdf<span class="pl-pds">'</span></span>)</pre></div>
+
+<p>An instance of <code>FillablePDF</code> has the following methods at its disposal:</p>
+
+<div class="highlight highlight-source-ruby"><pre>pdf.has_fields? <span class="pl-c"># returns true if the form has any fillable fields</span>
+
+pdf.num_fields <span class="pl-c"># get the total number of fillable form fields</span>
+
+pdf.get_field(<span class="pl-s"><span class="pl-pds">'</span>full_name<span class="pl-pds">'</span></span>) <span class="pl-c"># retrieve a single field value by field name</span>
+
+pdf.set_field(<span class="pl-s"><span class="pl-pds">'</span>first_name<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>Richard<span class="pl-pds">'</span></span>) <span class="pl-c"># set a single field</span>
+
+pdf.set_fields({<span class="pl-c1">first_name:</span> <span class="pl-s"><span class="pl-pds">'</span>Richard<span class="pl-pds">'</span></span>, <span class="pl-c1">last_name:</span> <span class="pl-s"><span class="pl-pds">'</span>Rahl<span class="pl-pds">'</span></span>}) <span class="pl-c"># set multiple fields</span></pre></div>
+
+<p>Once the PDF is filled out you can either overwrite it or save it as another file:</p>
+
+<div class="highlight highlight-source-ruby"><pre>pdf.save
+
+pdf.save_as(<span class="pl-s"><span class="pl-pds">'</span>output.pdf<span class="pl-pds">'</span></span>)</pre></div>
+
+<p>Or if you prefer to flatten the file (i.e. make it non-editable), you can instead use:</p>
+
+<div class="highlight highlight-source-ruby"><pre>pdf.save(<span class="pl-c1">true</span>)
+
+pdf.save_as(<span class="pl-s"><span class="pl-pds">'</span>output.pdf<span class="pl-pds">'</span></span>, <span class="pl-c1">true</span>)</pre></div>
+
+<h2>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example</h2>
+
+<p>For a fuller usage example of this gem, please see the contents of the <code>test</code> directory.</p>
+
+<h2>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributing</h2>
+
+<ol>
+<li>Fork it</li>
+<li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
+<li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
+<li>Create new Pull Request</li>
+</ol>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<p>The gem is available as open source under the terms of the <a href="http://opensource.org/licenses/MIT">MIT License</a>.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/vkononov/fillable-pdf">FillablePDF</a> is maintained by <a href="https://github.com/vkononov">vkononov</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
