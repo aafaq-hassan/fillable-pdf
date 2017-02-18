@@ -54,6 +54,18 @@ class FillablePDF
     @form_fields.getFields.size
   end
 
+  def get_fields
+    @fields ||= begin
+      fields = []
+      iterator = @form_fields.getFields.keySet.iterator
+
+      while iterator.hasNext
+        fields << iterator.next.toString
+      end
+
+      fields
+    end
+  end
 
   ##
   # Retrieves the value of a field given its unique field name.
