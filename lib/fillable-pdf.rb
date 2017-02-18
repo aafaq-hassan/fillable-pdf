@@ -2,7 +2,10 @@ require 'rjb'
 require 'securerandom'
 
 # http://github.com/itext/itextpdf/releases/latest
-Rjb::load(File.expand_path('../ext/itextpdf-5.5.9.jar', __dir__))
+EXT_PATH = File.expand_path('../ext', __dir__)
+Rjb::load("#{File.join(EXT_PATH, 'itextpdf-5.5.9.jar')}:" \
+          "#{File.join(EXT_PATH, 'bcprov-jdk15on-156.jar')}:" \
+          "#{File.join(EXT_PATH, 'bcpkix-jdk15on-156.jar')}")
 
 
 class FillablePDF
@@ -11,7 +14,11 @@ class FillablePDF
   BYTE_STREAM = Rjb::import('java.io.ByteArrayOutputStream')
   FILE_READER = Rjb::import('com.itextpdf.text.pdf.PdfReader')
   PDF_STAMPER = Rjb::import('com.itextpdf.text.pdf.PdfStamper')
+  DOCUMENT_BUILDER_FACTORY = Rjb::import('javax.xml.parsers.DocumentBuilderFactory')
+  INPUT_SOURCE = Rjb::import('org.xml.sax.InputSource')
+  STRING_READER = Rjb::import('java.io.StringReader')
 
+  FILE_READER.unethicalreading = true
 
   ##
   # Opens a given fillable PDF file and prepares it for modification.
@@ -19,10 +26,12 @@ class FillablePDF
   #   @param [String] file the name of the PDF file or file path
   #
   def initialize(file)
-    @file    = file
+    @file = file
+    @file_reader = FILE_READER.new(@file)
     @byte_stream = BYTE_STREAM.new
-    @pdf_stamper = PDF_STAMPER.new FILE_READER.new(@file), @byte_stream
+    @pdf_stamper = PDF_STAMPER.new @file_reader, @byte_stream, 0, true
     @form_fields = @pdf_stamper.getAcroFields
+    @xfa = @form_fields.getXfa
   end
 
 
@@ -78,6 +87,9 @@ class FillablePDF
     fields.each { |key, value| set_field key, value }
   end
 
+  def fill_xfa_form(xml, read_only = false)
+    @xfa.fillXfaForm(convert_xml_to_document(xml).getDocumentElement, read_only)
+  end
 
   ##
   # Overwrites the previously opened PDF file and flattens it if requested.
@@ -112,7 +124,16 @@ class FillablePDF
   def finalize(flatten)
     @pdf_stamper.setFormFlattening flatten
     @pdf_stamper.close
+    @file_reader.close
     @byte_stream.toByteArray
   end
 
+  def convert_xml_to_document(xml)
+    @factory ||= DOCUMENT_BUILDER_FACTORY.newInstance
+    @factory.setNamespaceAware(true)
+    @builder ||= @factory.newDocumentBuilder
+
+    @builder.parse(INPUT_SOURCE.new(STRING_READER.new(xml)))
+  end
+  
 end
